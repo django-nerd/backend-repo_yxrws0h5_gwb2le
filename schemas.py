@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Optional, List, Dict
 
 # Example schemas (replace with your own):
 
@@ -38,8 +38,36 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
 # --------------------------------------------------
+# Game Art Library Schemas
+# --------------------------------------------------
+
+class Character(BaseModel):
+    """
+    Game character schema
+    Collection: "character"
+    """
+    name: str = Field(..., description="Character name")
+    rarity: str = Field(..., description="Rarity tier: Common, Rare, Epic, Legendary, Champion")
+    nation_code: Optional[str] = Field(None, description="ISO country code for flag chip (e.g., 'CA', 'US')")
+    role: Optional[str] = Field(None, description="Position/role (e.g., Sniper, Enforcer, Playmaker)")
+    bio: Optional[str] = Field(None, description="Short description or lore")
+    image_url: Optional[HttpUrl] = Field(None, description="Artwork image URL")
+    palette: Optional[Dict[str, str]] = Field(None, description="Primary colors: home/away hex values")
+    stats: Optional[Dict[str, int]] = Field(None, description="Key stats map, e.g., speed, strength, aim")
+    tags: List[str] = Field(default_factory=list, description="Searchable tags")
+
+class Item(BaseModel):
+    """
+    Game item schema
+    Collection: "item"
+    """
+    name: str = Field(..., description="Item name")
+    type: str = Field(..., description="Type/category (e.g., Stick, Helmet, Boost)")
+    rarity: str = Field(..., description="Rarity tier: Common, Rare, Epic, Legendary, Champion")
+    effect: Optional[str] = Field(None, description="Effect or perk description")
+    image_url: Optional[HttpUrl] = Field(None, description="Artwork image URL")
+    tags: List[str] = Field(default_factory=list, description="Searchable tags")
 
 # Note: The Flames database viewer will automatically:
 # 1. Read these schemas from GET /schema endpoint
